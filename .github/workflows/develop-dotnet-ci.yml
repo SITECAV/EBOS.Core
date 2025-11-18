@@ -5,13 +5,13 @@ name: Develop .NET CI
 
 on:
   push:
-    branches: [ "develop" ]          # opcional, CI también en push a develop
+    branches: [ "develop" ]          # CI también en push directo a develop (opcional)
   pull_request:
     branches: [ "develop" ]          # PR cuyo destino sea 'develop'
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  develop-build:
+  develop-build:                      # ← ESTE ES EL NOMBRE DEL JOB DE BUILD
     runs-on: ubuntu-latest
 
     steps:
@@ -70,7 +70,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: pr.number,
-              merge_method: 'squash' // cambia a 'merge' o 'rebase' si lo prefieres
+              merge_method: 'squash' // MÉTODO DE MERGE: 'squash' (puedes cambiar a 'merge' o 'rebase')
             });
 
             core.info('PR mezclada correctamente en develop.');
