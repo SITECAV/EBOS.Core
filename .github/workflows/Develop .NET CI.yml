@@ -1,17 +1,17 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: Develop .NET CI
 
 on:
   push:
-    branches: [ "develop" ]          # opcional, por si quieres CI también en push directo
+    branches: [ "develop" ]          # opcional, CI también en push a develop
   pull_request:
     branches: [ "develop" ]          # PR cuyo destino sea 'develop'
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  build:
+  develop-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
     if: github.event_name == 'pull_request' && 
         github.event.pull_request.state == 'open' &&
         github.event.pull_request.base.ref == 'develop'
-    needs: build
+    needs: develop-build
     runs-on: ubuntu-latest
 
     permissions:
@@ -70,7 +70,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: pr.number,
-              merge_method: 'squash' // o 'merge' / 'rebase' si prefieres otro
+              merge_method: 'squash' // cambia a 'merge' o 'rebase' si lo prefieres
             });
 
             core.info('PR mezclada correctamente en develop.');
