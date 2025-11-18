@@ -1,4 +1,4 @@
-namespace SIE.Core.Primitives.Interfaces;
+namespace EBOS.Core.Primitives.Interfaces;
 
 public interface IRepository<T> where T : class
 {

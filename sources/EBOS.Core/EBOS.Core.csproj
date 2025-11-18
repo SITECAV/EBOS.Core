@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>6.0-all</AnalysisLevel>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>6.0-all</AnalysisLevel>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>EBOS Core</Title>
+		<Authors>SITECAV</Authors>
+		<Copyright>All rights reserved by SITECAV 2025</Copyright>
+		<PackageTags>Core; Kernel; Primitives</PackageTags>
+		<PackageReleaseNotes>Class library, which contains the utilities needed in the different WebAPIs and WebServices that make up the EBOS solution, to guarantee data confidentiality, access to the data, and common operability between them and with third parties.</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+		<RepositoryUrl>https://github.com/SITECAV/EBOS.Core</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseUrl></PackageLicenseUrl>
+		<Description>Class library, which contains the utilities needed in the different WebAPIs and WebServices that make up the EBOS solution, to guarantee data confidentiality, access to the data, and common operability between them and with third parties.</Description>
+		<PackageId>EBOS.Core</PackageId>
+		<PackageIcon>Logo_EBOS_128.png</PackageIcon>
+		<PackageOutputPath>$(SolutionDir)NuGet</PackageOutputPath>
+		<IncludeSymbols>True</IncludeSymbols>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\..\..\..\Images\Logo_EBOS_128.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
+      <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
+    </ItemGroup>
+
+</Project>

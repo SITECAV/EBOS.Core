@@ -1,2 +1,2 @@
-# SIE.Core
-Librería de clases comunes para los WebAPIs y WebServices del proyecto SIE
+# EBOS.Core
+Class library, which contains the utilities needed in the different WebAPIs and WebServices that make up the EBOS solution, to guarantee data confidentiality, access to the data, and common operability between them and with third parties.
