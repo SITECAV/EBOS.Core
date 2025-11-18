@@ -57,6 +57,7 @@ public class CryptoEngine
 
         byte[] iv = new byte[nBytes];
         RandomNumberGenerator.Fill(iv);
+
         return iv;
     }
     public virtual byte[] EncryptToAES(string plainText, string key, byte[] IV)
@@ -72,9 +73,7 @@ public class CryptoEngine
         aes.Key = AsciiEncoding.GetBytes(key);
         aes.Mode = CipherMode.CBC;
         aes.Padding = PaddingMode.PKCS7;
-
         int ivSize = aes.BlockSize / 8;
-
         if (IV.Length != ivSize)
             throw new ArgumentException($"IV must be {ivSize} bytes long.", nameof(IV));
         aes.GenerateIV();
@@ -103,7 +102,6 @@ public class CryptoEngine
         aes.IV = IV;
         aes.Mode = CipherMode.CBC;
         aes.Padding = PaddingMode.PKCS7;
-
         using ICryptoTransform decryptor = aes.CreateDecryptor();
         using MemoryStream msDecrypt = new(cipherText);
         using CryptoStream csDecrypt = new(msDecrypt, decryptor, CryptoStreamMode.Read);
@@ -118,6 +116,7 @@ public class CryptoEngine
             throw new ArgumentNullException(nameof(plainText));
 
         byte[] cipherBytes = EncryptToAES(plainText, key, IV);
+
         return Convert.ToBase64String(cipherBytes);
     }
     public virtual string DecryptFromAESBase64(string cipherBase64, string key, byte[] IV)
@@ -126,68 +125,24 @@ public class CryptoEngine
             throw new ArgumentNullException(nameof(cipherBase64));
 
         byte[] cipherBytes = Convert.FromBase64String(cipherBase64);
+
         return DecryptFromAES(cipherBytes, key, IV);
     }
     #endregion
 
     #region SHA
     public virtual string GenerateSHA256(string plainText)
-    {
-        if (plainText is null)
-            throw new ArgumentNullException(nameof(plainText));
-
-        using SHA3_256 hasher = SHA3_256.Create();
-        byte[] input = AsciiEncoding.GetBytes(plainText);
-        byte[] hash = hasher.ComputeHash(input);
-
-        return BytesToHex(hash);
-    }
+        => ComputeSha3HashHex(plainText, SHA3_256.Create);
     public virtual string GenerateSHA384(string plainText)
-    {
-        if (plainText is null)
-            throw new ArgumentNullException(nameof(plainText));
-
-        using SHA3_384 hasher = SHA3_384.Create();
-        byte[] input = AsciiEncoding.GetBytes(plainText);
-        byte[] hash = hasher.ComputeHash(input);
-
-        return BytesToHex(hash);
-    }
+        => ComputeSha3HashHex(plainText, SHA3_384.Create);
     public virtual string GenerateSHA512(string plainText)
-    {
-        if (plainText is null)
-            throw new ArgumentNullException(nameof(plainText));
-
-        using SHA3_512 hasher = SHA3_512.Create();
-        byte[] input = AsciiEncoding.GetBytes(plainText);
-        byte[] hash = hasher.ComputeHash(input);
-
-        return BytesToHex(hash);
-    }
+        => ComputeSha3HashHex(plainText, SHA3_512.Create);
     public virtual bool VerifySHA256(string plainText, string expectedHash)
-    {
-        if (expectedHash is null)
-            throw new ArgumentNullException(nameof(expectedHash));
-
-        string computed = GenerateSHA256(plainText);
-        return FixedTimeEquals(computed, expectedHash);
-    }
+        => VerifyHash(plainText, expectedHash, GenerateSHA256);
     public virtual bool VerifySHA384(string plainText, string expectedHash)
-    {
-        if (expectedHash is null)
-            throw new ArgumentNullException(nameof(expectedHash));
-
-        string computed = GenerateSHA384(plainText);
-        return FixedTimeEquals(computed, expectedHash);
-    }
+        => VerifyHash(plainText, expectedHash, GenerateSHA384);
     public virtual bool VerifySHA512(string plainText, string expectedHash)
-    {
-        if (expectedHash is null)
-            throw new ArgumentNullException(nameof(expectedHash));
-
-        string computed = GenerateSHA512(plainText);
-        return FixedTimeEquals(computed, expectedHash);
-    }
+        => VerifyHash(plainText, expectedHash, GenerateSHA512);
     #endregion
 
     #region Token
@@ -223,22 +178,24 @@ public class CryptoEngine
             throw new ArgumentNullException(nameof(tokenBase64));
 
         string computedToken = CreateTokenHMACSHA256(plainText, secret);
+
         return FixedTimeEquals(computedToken, tokenBase64);
     }
     #endregion
 
+    #region Helpers
     private static string BytesToHex(byte[] bytes)
     {
         if (bytes is null)
             throw new ArgumentNullException(nameof(bytes));
 
         StringBuilder sb = new(bytes.Length * 2);
+
         for (int i = 0; i < bytes.Length; i++)
             sb.Append(bytes[i].ToString("x2", CultureInfo.InvariantCulture));
 
         return sb.ToString();
     }
-
     private static bool FixedTimeEquals(string a, string b)
     {
         if (a is null || b is null)
@@ -253,4 +210,28 @@ public class CryptoEngine
 
         return diff == 0;
     }
+    private static string ComputeSha3HashHex(string plainText, Func<HashAlgorithm> algorithmFactory)
+    {
+        if (plainText is null)
+            throw new ArgumentNullException(nameof(plainText));
+        if (algorithmFactory is null)
+            throw new ArgumentNullException(nameof(algorithmFactory));
+
+        using HashAlgorithm hasher = algorithmFactory();
+        byte[] input = AsciiEncoding.GetBytes(plainText);
+        byte[] hash = hasher.ComputeHash(input);
+
+        return BytesToHex(hash);
+    }
+    private static bool VerifyHash(string plainText, string expectedHash, Func<string, string> hashGenerator)
+    {
+        if (expectedHash is null)
+            throw new ArgumentNullException(nameof(expectedHash));
+        if (hashGenerator is null)
+            throw new ArgumentNullException(nameof(hashGenerator));
+
+        string computed = hashGenerator(plainText);
+        return FixedTimeEquals(computed, expectedHash);
+    }
+    #endregion
 }
