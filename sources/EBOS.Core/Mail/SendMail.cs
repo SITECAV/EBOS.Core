@@ -1,56 +1,83 @@
 ﻿using EBOS.Core.Mail.Dto;
 using MailKit.Net.Smtp;
 using MimeKit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EBOS.Core.Mail;
 
 public class SendMail : ISendMail
 {
-    public async Task SendAsync(MailMessageDto mailMessage, MailSettingsDto mailSettings)
+    public async Task SendAsync(MailMessageDto mailMessageDto, MailSettingsDto mailSettings)
     {
-        if (!mailSettings.SendMail) return;
-        var message = CreateMessage(mailMessage);
-        await SendMessageAsync(mailSettings, message);
+        // Validación de parámetros de métodos públicos (CA1062)
+        if (mailMessageDto is null)
+            throw new ArgumentNullException(nameof(mailMessageDto));
+        if (mailSettings is null)
+            throw new ArgumentNullException(nameof(mailSettings));
+        if (!mailSettings.SendMail)
+            return;
+        // MimeMessage implementa IDisposable -> usar using para cumplir CA2000
+        using var message = CreateMessage(mailMessageDto);
+        await SendMessageAsync(mailSettings, message).ConfigureAwait(false);
     }
 
-    private static MimeMessage CreateMessage(MailMessageDto mailMessage)
+    [SuppressMessage(
+        "Reliability",
+        "CA2000:Dispose objects before losing scope",
+        Justification = "La propiedad Body y las partes (TextPart, MimePart, Multipart) pasan a ser propiedad de MimeMessage, " +
+                        "que se desecha en SendAsync mediante using."
+    )]
+    private static MimeMessage CreateMessage(MailMessageDto mailMessageDto)
     {
         var message = new MimeMessage();
-        message.From.AddRange(mailMessage.FromAddress.Select(mailAddress => new MailboxAddress(mailAddress.Name, mailAddress.Address)));
-        message.To.AddRange(mailMessage.ToAddress.Select(mailAddress => new MailboxAddress(mailAddress.Name, mailAddress.Address)));
-        message.Subject = mailMessage.Subject;
 
-        message.Body = new TextPart(mailMessage.BodyType)
+        message.From.AddRange(
+            mailMessageDto.FromAddress.Select(ma => new MailboxAddress(ma.Name, ma.Address)));
+        message.To.AddRange(
+            mailMessageDto.ToAddress.Select(ma => new MailboxAddress(ma.Name, ma.Address)));
+        message.Subject = mailMessageDto.Subject;
+        var body = new TextPart(mailMessageDto.BodyType)
         {
-            Text = mailMessage.Message
+            Text = mailMessageDto.Message
         };
-
-        if (mailMessage.MailAttachment != null)
+        if (mailMessageDto.MailAttachment is null)
         {
-            var attachment = new MimePart(mailMessage.MailAttachment.MediaType)
-            {
-                FileName = mailMessage.MailAttachment.FileName,
-                Content = new MimeContent(new MemoryStream(mailMessage.MailAttachment.Content)),
-                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-                ContentTransferEncoding = ContentEncoding.Base64
-            };
-
-            var multipart = new Multipart("mixed") {
-                        message.Body,
-                        attachment
-                    };
-
-            message.Body = multipart;
+            message.Body = body;
+            return message;
         }
+        var attachmentDto = mailMessageDto.MailAttachment;
+
+        var attachment = new MimePart(attachmentDto.MediaType)
+        {
+            FileName = mailMessageDto.MailAttachment.FileName,
+            // MemoryStream con byte[] está bien; lo mantiene MimeKit mientras se envía
+            Content = new MimeContent(new MemoryStream(attachmentDto.Content)),
+            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+            ContentTransferEncoding = ContentEncoding.Base64
+        };
+        var multipart = new Multipart("mixed") {
+            message.Body,
+            attachment
+        };
+        message.Body = multipart;
+
         return message;
     }
 
     private static async Task SendMessageAsync(MailSettingsDto mailSettings, MimeMessage message)
     {
         using var client = new SmtpClient();
-        await client.ConnectAsync(mailSettings.Server, mailSettings.Port, mailSettings.HasSSL);
-        await client.AuthenticateAsync(mailSettings.MailUser, mailSettings.MailPassword);
-        await client.SendAsync(message);
-        await client.DisconnectAsync(true);
+
+        await client
+            .ConnectAsync(mailSettings.Server, mailSettings.Port, mailSettings.HasSSL)
+            .ConfigureAwait(false);
+
+        // Por si tienes servidores sin autenticación, puedes dejar esta condición
+        if (!string.IsNullOrEmpty(mailSettings.MailUser))
+            await client
+                .AuthenticateAsync(mailSettings.MailUser, mailSettings.MailPassword)
+                .ConfigureAwait(false);
+        await client.SendAsync(message).ConfigureAwait(false);
+        await client.DisconnectAsync(true).ConfigureAwait(false);
     }
 }
