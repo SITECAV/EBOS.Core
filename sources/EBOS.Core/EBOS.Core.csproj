@@ -15,8 +15,32 @@
 		<Title>EBOS Core</Title>
 		<Authors>SITECAV</Authors>
 		<Copyright>All rights reserved by SITECAV 2025</Copyright>
-		<PackageTags>Core; Kernel; Primitives; Cryptography</PackageTags>
-		<PackageReleaseNotes>In this version 1.0.1, the CryptoEngine class was added, which allows cryptography to be performed.</PackageReleaseNotes>
+		<PackageTags>Core; Kernel; Primitives; Cryptography; BusinessErrors; Extensions</PackageTags>
+		<PackageReleaseNotes>The following classes are exposed:
+
+OperationResults
+SingletonObjectCache
+BusinessError: 
+    BusinessErrorObject 
+    BusinessErrorType
+Crypto: 
+    CryptoEngine
+Extensions: 
+    ArrayExtensions 
+    DateExtensions 
+    IEnumerableExtensions 
+    IListExtension 
+    IntegerExtensions 
+    OperationResultExtensions 
+    StringExtensions
+Primitives: 
+    BaseEntity 
+    ErasedEntity 
+    ErrorResult
+Primitive Interfaces: 
+    IErrorResult 
+    IRepository 
+    ISoftDelete</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
 		<FileVersion>$(VersionPrefix)</FileVersion>
@@ -35,7 +59,7 @@
 	</PropertyGroup>
 
     <ItemGroup>
-      <None Include="..\..\..\..\Images\Logo_EBOS_128.png">
+      <None Include="..\..\documentacion\Images\Logo_EBOS_128.png">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>

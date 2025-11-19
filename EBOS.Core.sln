@@ -18,6 +18,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución",
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{CFC3D6EA-3CE0-400A-896C-E265E5FF1367}"
+	ProjectSection(SolutionItems) = preProject
+		documentacion\Images\Logo_EBOS_128.png = documentacion\Images\Logo_EBOS_128.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F80A72CC-9B1F-4ABA-ABFE-2F5A9B257E41} = {DB7E4B71-2FF9-4EDA-9B56-BE2E80F8FE32}
 		{14AA5C88-41C4-4E69-9033-432F8974E6C0} = {FAAE1604-B28B-4EA1-9328-ACD3C4AB3A26}
+		{CFC3D6EA-3CE0-400A-896C-E265E5FF1367} = {5D48BD83-6E89-47DE-AC93-C4A2619DD457}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0790AEB7-BB65-4E45-8983-0255D31E9AFB}
