@@ -8,18 +8,16 @@ public class ErasedEntityTests
 {
     #region Helper concrete implementation
     private class TestErasedEntity : ErasedEntity
-    {
-        // Implementación mínima para poder instanciar ErasedEntity
-    }
+    { }
     #endregion
 
     #region Interface contract
     [Fact]
     public void ErasedEntity_ImplementsISoftDelete()
     {
-        var entity = new TestErasedEntity();
+       var entity = new TestErasedEntity();
 
-        Assert.IsType<ISoftDelete>(entity, exactMatch: false);
+       Assert.IsAssignableFrom<ISoftDelete>(entity);
     }
     #endregion
 
@@ -27,9 +25,9 @@ public class ErasedEntityTests
     [Fact]
     public void NewEntity_DefaultErasedIsFalse()
     {
-        var entity = new TestErasedEntity();
+       var entity = new TestErasedEntity();
 
-        Assert.False(entity.Erased);
+       Assert.False(entity.Erased);
     }
 
     [Fact]
@@ -46,15 +44,14 @@ public class ErasedEntityTests
     [Fact]
     public void CanToggleErased()
     {
-        var entity = new TestErasedEntity
-        {
-            Erased = true
-        };
+        var entity = new TestErasedEntity();
 
+        entity.Erased = true;
+            
         Assert.True(entity.Erased);
 
         entity.Erased = false;
-
+            
         Assert.False(entity.Erased);
     }
     #endregion
@@ -68,7 +65,7 @@ public class ErasedEntityTests
         Assert.NotNull(prop);
 
         var requiredAttrs = prop!.GetCustomAttributes(typeof(RequiredAttribute), inherit: true);
-
+            
         Assert.NotEmpty(requiredAttrs);
     }
 
