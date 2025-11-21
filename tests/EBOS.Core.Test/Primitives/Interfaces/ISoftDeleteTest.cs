@@ -2,62 +2,53 @@
 
 namespace EBOS.Core.Test.Primitives.Interfaces;
 
-public class ISoftDeleteTests
+public class ISoftDeletableTests
 {
-    #region Helper implementation
-    private class SoftDeleteEntity : ISoftDelete
+    private class Dummy : ISoftDeletable
     {
         public bool Erased { get; set; }
     }
-    #endregion
 
-    #region Interface shape (reflection)
+    // ----- INSTANCIACIÓN -----
+
     [Fact]
-    public void ISoftDelete_HasProperty_Erased_WithGetAndSet_OfTypeBool()
+    public void SoftDeletable_ShouldAllowInstantiationViaImplementer()
     {
-        var type = typeof(ISoftDelete);
-        var prop = type.GetProperty(nameof(ISoftDelete.Erased));
+        ISoftDeletable entity = new Dummy();
+
+        Assert.NotNull(entity);
+    }
+
+    // ----- DEFAULT -----
+
+    [Fact]
+    public void Erased_DefaultValue_ShouldBeFalse()
+    {
+        var entity = new Dummy();
+
+        Assert.False(entity.Erased);
+    }
+
+    // ----- READ/WRITE -----
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Erased_ShouldAcceptBooleanValues(bool value)
+    {
+        var entity = new Dummy { Erased = value };
+
+        Assert.Equal(value, entity.Erased);
+    }
+
+    // ----- CONTRACT CHECK -----
+
+    [Fact]
+    public void ISoftDeletable_ShouldHaveBooleanErasedProperty()
+    {
+        var prop = typeof(ISoftDeletable).GetProperty("Erased");
 
         Assert.NotNull(prop);
         Assert.Equal(typeof(bool), prop!.PropertyType);
-        Assert.True(prop.CanRead);
-        Assert.True(prop.CanWrite);
     }
-    #endregion
-
-    #region Basic contract behavior via implementation
-    [Fact]
-    public void Implementation_DefaultErasedValue_IsFalseByDefault()
-    {
-        ISoftDelete entity = new SoftDeleteEntity();
-
-        Assert.False(entity.Erased);
-    }
-
-    [Fact]
-    public void Implementation_CanSetErasedToTrue()
-    {
-        ISoftDelete entity = new SoftDeleteEntity
-        {
-            Erased = true
-        };
-
-        Assert.True(entity.Erased);
-    }
-
-    [Fact]
-    public void Implementation_CanToggleErasedFlag()
-    {
-        ISoftDelete entity = new SoftDeleteEntity
-        {
-            Erased = true
-        };
-
-        Assert.True(entity.Erased);
-
-        entity.Erased = false;
-
-        Assert.False(entity.Erased);
-    }
-    #endregion
 }
