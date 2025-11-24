@@ -6,70 +6,83 @@ namespace EBOS.Core.Test.Primitives;
 
 public class BaseEntityTests
 {
-    #region Helper concrete implementation
-    private class TestEntity : BaseEntity
-    {
-        // No extra members needed for testing BaseEntity
-    }
-    #endregion
+    private class TestEntity : BaseEntity { }
 
-    #region Id property behavior
+    // ----- INSTANCIACIÓN -----
+
     [Fact]
-    public void NewEntity_HasDefaultIdZero()
+    public void BaseEntity_ShouldBeInstantiableThroughChildClass()
+    {
+        var entity = new TestEntity();
+
+        Assert.NotNull(entity);
+    }
+
+    // ----- ID DEFAULT -----
+
+    [Fact]
+    public void Id_DefaultValue_ShouldBeZero()
     {
         var entity = new TestEntity();
 
         Assert.Equal(0L, entity.Id);
     }
 
-    [Fact]
-    public void CanSetAndGetId()
+    // ----- ID WRITE/READ -----
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(9999999999)]
+    [InlineData(long.MaxValue)]
+    public void Id_ShouldAllowValidAssignments(long value)
     {
-        var entity = new TestEntity
-        {
-            Id = 123L
-        };
+        var entity = new TestEntity { Id = value };
 
-        Assert.Equal(123L, entity.Id);
-    }
-    #endregion
-
-    #region Attributes on Id property
-    [Fact]
-    public void Id_HasKeyAttribute()
-    {
-        var prop = typeof(BaseEntity).GetProperty(nameof(BaseEntity.Id));
-
-        Assert.NotNull(prop);
-
-        var keyAttr = prop!.GetCustomAttributes(typeof(KeyAttribute), inherit: true);
-
-        Assert.NotEmpty(keyAttr);
+        Assert.Equal(value, entity.Id);
     }
 
+    // ----- ATTRIBUTE CHECKS -----
+
     [Fact]
-    public void Id_HasDatabaseGeneratedAttribute_WithIdentityOption()
+    public void Id_ShouldHaveKeyAttribute()
     {
-        var prop = typeof(BaseEntity).GetProperty(nameof(BaseEntity.Id));
+        var info = typeof(BaseEntity).GetProperty(nameof(BaseEntity.Id)) ??
+            throw new InvalidOperationException("Id property not found on BaseEntity.");
+        var keyAttr = info
+            .GetCustomAttributes(typeof(KeyAttribute), inherit: true)
+            .OfType<KeyAttribute>()
+            .SingleOrDefault();
 
-        Assert.NotNull(prop);
-
-        var dbGeneratedAttrs = prop!.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), inherit: true);
-
-        Assert.NotEmpty(dbGeneratedAttrs);
-
-        var dbGeneratedAttr = Assert.IsType<DatabaseGeneratedAttribute>(dbGeneratedAttrs[0]);
-
-        Assert.Equal(DatabaseGeneratedOption.Identity, dbGeneratedAttr.DatabaseGeneratedOption);
+        Assert.NotNull(keyAttr);
     }
 
     [Fact]
-    public void Id_IsOfTypeLong()
+    public void Id_ShouldHaveDatabaseGeneratedIdentityAttribute()
     {
-        var prop = typeof(BaseEntity).GetProperty(nameof(BaseEntity.Id));
+        var info = typeof(BaseEntity).GetProperty(nameof(BaseEntity.Id)) ?? 
+            throw new InvalidOperationException("Id property not found on BaseEntity.");
+        var attr = info.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true)
+                       .OfType<DatabaseGeneratedAttribute>()
+                       .FirstOrDefault();
 
-        Assert.NotNull(prop);
-        Assert.Equal(typeof(long), prop!.PropertyType);
+        Assert.NotNull(attr);
+        Assert.Equal(DatabaseGeneratedOption.Identity, attr!.DatabaseGeneratedOption);
     }
-    #endregion
+
+    // ----- TYPE CHECKS -----
+
+    [Fact]
+    public void BaseEntity_ShouldBeAbstract()
+    {
+        Assert.True(typeof(BaseEntity).IsAbstract);
+    }
+
+    [Fact]
+    public void BaseEntity_ShouldContainOnlyOneProperty_Id()
+    {
+        var props = typeof(BaseEntity).GetProperties().Select(x => x.Name).ToList();
+
+        Assert.Single(props);
+        Assert.Equal("Id", props[0]);
+    }
 }
