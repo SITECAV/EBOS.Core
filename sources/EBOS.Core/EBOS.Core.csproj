@@ -22,7 +22,9 @@ Includes:
 
 - BusinessErrors
 - Cryptography
-- Enumerates
+- Enumerates:
+   - AuditDescriptionOptions
+   - SpanishIdentificationType
 - Primitive Data Extensions
 - Email Sending
 - Validators
