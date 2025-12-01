@@ -5,11 +5,11 @@ public interface IRepository<TEntity> where TEntity : class
     #region Commands
     Task AddAsync(TEntity entity, CancellationToken cancellationToken);
     void Update(TEntity entity);
-    void DeleteAsync(TEntity entity, CancellationToken cancellationToken);
+    void Delete(TEntity entity);
     #endregion
 
     #region Queries
-    Task<TEntity?> GetByIdAsync(long id);
     Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken);
+    Task<TEntity?> GetByIdAsync(long id);
     #endregion
 }

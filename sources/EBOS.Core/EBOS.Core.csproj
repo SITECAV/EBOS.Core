@@ -29,7 +29,8 @@ Includes:
 - Primitives:
     - Base Entity
     - Deleteable Entity
-    - Error Base Class</PackageReleaseNotes>
+    - Error Base Class
+    - Primitives Interfaces</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
 		<FileVersion>$(VersionPrefix)</FileVersion>
