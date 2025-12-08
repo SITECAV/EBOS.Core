@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
         <Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -16,23 +16,7 @@
 		<Authors>SITECAV</Authors>
 		<Copyright>All rights reserved by SITECAV 2025</Copyright>
 		<PackageTags>Core; Kernel; Primitives; Cryptography; BusinessErrors; Extensions</PackageTags>
-		<PackageReleaseNotes>First complete stable version with all the classes necessary to work in EBOS.CRM.
-
-Includes:
-
-- BusinessErrors
-- Cryptography
-- Enumerates:
-   - AuditDescriptionOptions
-   - SpanishIdentificationType
-- Primitive Data Extensions
-- Email Sending
-- Validators
-- Primitives:
-    - Base Entity
-    - Deleteable Entity
-    - Error Base Class
-    - Primitives Interfaces</PackageReleaseNotes>
+		<PackageReleaseNotes>Inclue support to NET 8.0 y NET 10.0</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
 		<FileVersion>$(VersionPrefix)</FileVersion>
@@ -66,16 +50,17 @@ Includes:
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
-      <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
       <PackageReference Include="MailKit" Version="4.14.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
       <PackageReference Include="MimeKit" Version="4.14.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-      <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+	  <PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
     </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net10.0'">
+		<PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
+	</ItemGroup>
 
-    <ItemGroup>
+	<ItemGroup>
       <Folder Include="Configurations\" />
     </ItemGroup>
 
