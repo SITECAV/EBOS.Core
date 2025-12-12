@@ -16,7 +16,7 @@
 		<Authors>SITECAV</Authors>
 		<Copyright>All rights reserved by SITECAV 2025</Copyright>
 		<PackageTags>Core; Kernel; Primitives; Cryptography; BusinessErrors; Extensions</PackageTags>
-		<PackageReleaseNotes>Inclue support to NET 8.0 y NET 10.0</PackageReleaseNotes>
+		<PackageReleaseNotes>CancellationToken is added in the EndTransaction method of the UnitOfWork interface.</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
 		<FileVersion>$(VersionPrefix)</FileVersion>
