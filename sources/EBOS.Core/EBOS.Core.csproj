@@ -13,7 +13,10 @@
 		<Authors>SITECAV</Authors>
 		<Copyright>All rights reserved by SITECAV 2025</Copyright>
 		<PackageTags>Core; Kernel; Primitives; Cryptography; BusinessErrors; Extensions</PackageTags>
-		<PackageReleaseNotes>CancellationToken is added in the EndTransaction method of the UnitOfWork interface.</PackageReleaseNotes>
+		<PackageReleaseNotes>The code has been adapted to the latest version of the C# programming language, using the syntax for NET 8.0 and NET 10.0.
+Improvements have been made to the validator classes.
+The email sending classes have been improved.
+And the Errorresult primitive has been corrected so that the exceptionMsg parameter is null by default.</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
