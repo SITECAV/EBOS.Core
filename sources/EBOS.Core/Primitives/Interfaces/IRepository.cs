@@ -11,7 +11,7 @@ public interface IRepository<TEntity> where TEntity : class
     #endregion
 
     #region Queries
-    Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
     #endregion
 }
