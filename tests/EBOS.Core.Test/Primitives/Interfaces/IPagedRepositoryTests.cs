@@ -21,8 +21,8 @@ public class IPagedRepositoryTests
         public Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
             => Task.CompletedTask;
 
-        public Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken)
-            => Task.FromResult<ICollection<TEntity>>(new List<TEntity>());
+        public Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+            => Task.FromResult<IReadOnlyCollection<TEntity>>(new List<TEntity>());
 
         public Task<TEntity?> GetByIdAsync(long id, CancellationToken cancellationToken)
             => Task.FromResult<TEntity?>(null);

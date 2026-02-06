@@ -13,10 +13,7 @@
 		<Authors>SITECAV</Authors>
 		<Copyright>All rights reserved by SITECAV 2025</Copyright>
 		<PackageTags>Core; Kernel; Primitives; Cryptography; BusinessErrors; Extensions</PackageTags>
-		<PackageReleaseNotes>The code has been adapted to the latest version of the C# programming language, using the syntax for NET 8.0 and NET 10.0.
-Improvements have been made to the validator classes.
-The email sending classes have been improved.
-And the Errorresult primitive has been corrected so that the exceptionMsg parameter is null by default.</PackageReleaseNotes>
+		<PackageReleaseNotes>I've corrected the generic repository interface IRepository so that the GetAll methods of all repositories return a read-only collection of the entity in question.</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
@@ -43,7 +40,7 @@ And the Errorresult primitive has been corrected so that the exceptionMsg parame
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\..\documentacion\Images\Logo_EBOS_128.png">
+      <None Include="..\..\documentation\Images\Logo_EBOS_128.png">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>
