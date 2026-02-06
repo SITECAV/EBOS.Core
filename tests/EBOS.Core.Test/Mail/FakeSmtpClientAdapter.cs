@@ -1,4 +1,4 @@
-﻿using EBOS.Core.Mail;
+using EBOS.Core.Mail;
 using MimeKit;
 
 namespace EBOS.Core.Test.Mail;
@@ -26,7 +26,6 @@ public sealed class FakeSmtpClientAdapter : ISmtpClientAdapter
 
         return Task.CompletedTask;
     }
-
     public Task AuthenticateAsync(string userName, string password, CancellationToken cancellationToken = default)
     {
         AuthenticateCalled = true;
@@ -35,12 +34,11 @@ public sealed class FakeSmtpClientAdapter : ISmtpClientAdapter
 
         return Task.CompletedTask;
     }
-
     public Task SendAsync(MimeMessage message, CancellationToken cancellationToken = default)
     {
         SendCalled = true;
 
-        // Guardamos una copia independiente del mensaje para inspeccionarla en los tests
+        // Store an independent copy of the message for test inspection.
         using var ms = new MemoryStream();
         message.WriteTo(ms, cancellationToken);
         ms.Position = 0;
@@ -48,16 +46,21 @@ public sealed class FakeSmtpClientAdapter : ISmtpClientAdapter
 
         return Task.CompletedTask;
     }
-
     public Task DisconnectAsync(bool quit, CancellationToken cancellationToken = default)
     {
         DisconnectCalled = true;
 
         return Task.CompletedTask;
     }
-
     public void Dispose()
     {
         Disposed = true;
+    }
+    public ValueTask DisposeAsync()
+    {
+        // Async implementation compatible with IAsyncDisposable.
+        // Call Dispose() for safety and return CompletedTask.
+        Dispose();
+        return ValueTask.CompletedTask;
     }
 }

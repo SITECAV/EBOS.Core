@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EBOS.Core.Primitives;
@@ -7,7 +7,7 @@ namespace EBOS.Core.Primitives;
 /// Practical basic class for entities.
 /// The entities in the domain must inherit from this class.
 /// </summary>
-public abstract class BaseEntity 
+public abstract class BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
